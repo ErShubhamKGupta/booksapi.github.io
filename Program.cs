@@ -10,6 +10,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins,
+                          policy =>
+                          {
+                              policy.WithOrigins("https://ershubhamkgupta.github.io/booksapi.github.io")
+                                                  .AllowAnyHeader()
+                                                  .AllowAnyMethod();
+                          });
+});
 
 builder.Services.AddDbContext<BooksAPIDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -24,6 +35,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
